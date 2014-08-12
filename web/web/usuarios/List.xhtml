@@ -16,7 +16,7 @@
                 <br />
                 <br />
                 <h:panelGroup >
-                    <p:growl id="msgs_errores" autoUpdate="true"></p:growl> 
+                    <p:growl id="msgs_errores" autoUpdate="true" life="20000"></p:growl> 
                     <h:outputLabel value="Filtrar por: " for="filtro"  />
                     <h:selectOneMenu id="filtro" value="#{usuariosController.filtar_por}" title="Filtar usuarios por" validator="#{usuariosController.asignarFiltro}" >
                         <f:selectItem itemValue="1" itemLabel="Nombre" />

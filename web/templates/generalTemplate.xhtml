@@ -32,11 +32,11 @@
                 <p:layoutUnit position="east" size="270" header="Sesión Iniciada" rendered="#{loggin.activa}" collapsible="true" >
                     <ui:include src="/web/usuarios/perfil.xhtml" class="iniciarsesion"/>
                 </p:layoutUnit>                 
-                
-                <ui:insert name="contenido" >   
-                    
-                </ui:insert>
-                
+
+                <p:layoutUnit position="center">
+                    <ui:insert name="contenido">Content</ui:insert>
+                </p:layoutUnit>
+
                 <p:layoutUnit position="south" size="140" closable="true" collapsible="true">
                     <ui:include src="/componentes/piePagina.xhtml" />
                 </p:layoutUnit>

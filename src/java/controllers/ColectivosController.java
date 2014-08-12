@@ -1,11 +1,16 @@
 package controllers;
 
 import clases.Colectivos;
+import clases.Mensaje;
+import static controllers.MensajeController.mensaje_List;
+import static controllers.MensajeController.setMensaje_List;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
 import facade.ColectivosFacade;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -77,17 +82,6 @@ public class ColectivosController implements Serializable {
         current = new Colectivos();
         selectedItemIndex = -1;
         return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ColectivosCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
     }
 
     public String prepareEdit() {
@@ -232,4 +226,24 @@ public class ColectivosController implements Serializable {
 
     }
 
+    
+                               //CODIGO PERSONAL
+    
+    public String create() {
+        try {
+            asignarTodo();
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ColectivosCreated"));
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+    
+        public void asignarTodo() {
+        JsfUtil.addSuccessMessage("asignar todo");
+        current.setColectFecha(new Date());
+        current.setColectUsrId(UsuariosController.getCurrent());
+    }
 }

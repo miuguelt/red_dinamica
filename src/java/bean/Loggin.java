@@ -145,10 +145,10 @@ public class Loggin implements InterfaceBean {
     }
 
     public void cerrarSesion() throws IOException {
-        UsuariosController.getCurrent().setUsrId(null);
+        UsuariosController.setCurrent(null);
         UsuariosController.setCurrent(new Usuarios());
         session.setActiva(false);
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+//        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
     }
 
@@ -164,7 +164,7 @@ public class Loggin implements InterfaceBean {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/componentes/contactenos.xhtml");
                 break;
             case "colectivos":
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/colectivos/colectivosTemplateClient.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/colectivos/List.xhtml");
                 break;
             case "foros":
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/foros/forosTemplateClient.xhtml");

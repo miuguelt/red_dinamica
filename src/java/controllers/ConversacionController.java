@@ -3,7 +3,6 @@ package controllers;
 import clases.Conversacion;
 import clases.Mensaje;
 import clases.Usuarios;
-import static controllers.MensajeController.mensaje_List;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
 import facade.ConversacionFacade;
@@ -11,8 +10,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -168,7 +165,7 @@ public class ConversacionController implements Serializable {
         if (items == null) {
             items = getPagination().createPageDataModel();
         }
-        return items;
+        return items = new ListDataModel(listaConversacion);
     }
 
     private void recreateModel() {
@@ -253,11 +250,21 @@ public class ConversacionController implements Serializable {
     private int cont_msj = 0;
     private List<Mensaje> nuevos;
     private Usuarios usrActual;// = UsuariosController.getCurrent();
+    private List<Conversacion> listaConversacion;
+
+    public List<Conversacion> getListaConversacion() {
+        return listaConversacion;
+    }
+
+    public void setListaConversacion(List<Conversacion> listaConversacion) {
+        this.listaConversacion = listaConversacion;
+    }
+    
     public static Conversacion getCurrent() {
         return current;
     }
 
-    public void setCurrent(Conversacion current) {
+    public static void setCurrent(Conversacion current) {
         ConversacionController.current = current;
     }
 
@@ -325,58 +332,43 @@ public class ConversacionController implements Serializable {
         return usrActual;
     }
     
-    public void leerMensajes() {
-        JsfUtil.addSuccessMessage("marca1");
-        List<Mensaje> msjs = (List<Mensaje>) current.getMensajeCollection();
-        for (Mensaje mensaje : msjs) {
-            if (!mensaje.getMsjLeido() && mensaje.getMsjDestinatario().equals(getUsrActual())) {
-                cont_msj--;
-                mensaje.setMsjLeido(true);
-            }
+    public void cargarConversaciones() {
+        try {
+            if (listaConversacion == null) {
+                listaConversacion = new ArrayList<>((List<Conversacion>) getUsrActual().getConversacionCollection());                  
+                listaConversacion.addAll((List<Conversacion>) getUsrActual().getConversacionCollection1());
+                JsfUtil.addSuccessMessage("entra al if: "+getListaConversacion());
+                recreateModel();
+                items = new ListDataModel(listaConversacion);
+            }            
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage("Error al cargar las conversaciones del usuario... " + e);
         }
-
-        current.setMensajeCollection(msjs);
-        update();
     }
 
-//    public void cargarConversaciones() {
-//        try {
-//            if (ejbFacade.cargarConversaciones(getUsrActual().getUsrId()).isEmpty()) {
-//                List<Conversacion> lista_conv = ejbFacade.cargarConversaciones(getUsrActual().getUsrId());
-//                HashSet<Usuarios> hashSet = new HashSet(lista_conv);
-//                lista_conv = new ArrayList<>();
-//                // Eliminamos Usuarios repetidos
-//                for (Iterator it = hashSet.iterator(); it.hasNext();) {
-//                    lista_conv.add((Conversacion) it.next());
-//                }
-//                items = new ListDataModel(lista_conv);
-//            }
-//        } catch (Exception e) {
-//            JsfUtil.addErrorMessage("Error al cargar las conversaciones del usuario... " + e);
-//        }
-//    }
-
     public void cargarConversacion() throws IOException {
-        try {
-            recreateModel();
-            List<Conversacion> listaConversacion = ejbFacade.existeConversacion(getUsrActual().getUsrId(), getUsrDestino().getUsrId());
-            if (!listaConversacion.isEmpty()) { //Si la conversacion existe
-                JsfUtil.addSuccessMessage("Tamaño: " + listaConversacion.size());
-                JsfUtil.addSuccessMessage("0: " + listaConversacion.get(0).getConvUsr2Id().getUsrNombres());
-                setCurrent(listaConversacion.get(0));
-                JsfUtil.addSuccessMessage("Current: "+ getCurrent().getConvUsr2Id().getUsrNombres());
+        try {            
+            cargarConversaciones();
+            for (int i = 0; i < getListaConversacion().size(); i++){ 
+                if((getListaConversacion().get(i).getConvUsr1Id().getUsrId() == usrDestino.getUsrId()) || (getListaConversacion().get(i).getConvUsr2Id().getUsrId() == usrDestino.getUsrId())) {
+                    setCurrent(getListaConversacion().get(i)); JsfUtil.addSuccessMessage("for Exites conv: "+getCurrent());
+                } else {
+                    JsfUtil.addSuccessMessage("for No existe conversacion");
+                }
+            }
+            if (getCurrent() != null) { //Si la conversacion existe
+                JsfUtil.addSuccessMessage("La conversacion existe");
+                JsfUtil.addSuccessMessage("MEnsajes: "+new ArrayList<>(getCurrent().getMensajeCollection()));
                 if(!getCurrent().getMensajeCollection().isEmpty()){ //Si hay mensages
-                    JsfUtil.addSuccessMessage("Coleccion vacia:"+getCurrent().getMensajeCollection().isEmpty());
+                    JsfUtil.addSuccessMessage("Hay mensajes");
                     MensajeController.setMensaje_List((List<Mensaje>) getCurrent().getMensajeCollection());
-                    JsfUtil.addSuccessMessage("Mensage List vacio:"+MensajeController.getMensaje_List().isEmpty());       
                 }else{ //Si no hay mensages
-                    JsfUtil.addSuccessMessage("Mensaje list null");
+                    JsfUtil.addSuccessMessage("No hay mensajes");
                     MensajeController.setMensaje_List(null);
                 }
             } else { //Si la conversacion no existe
                 MensajeController.setMensaje_List(null);
-                JsfUtil.addSuccessMessage("Mensaje list null");
-                JsfUtil.addSuccessMessage("Está vacia"); 
+                JsfUtil.addSuccessMessage("La conversacion NO existe");
                 current = new Conversacion();
                 current.setConvAsunto(" ");
                 current.setConvUltimo(new Date());
@@ -384,63 +376,11 @@ public class ConversacionController implements Serializable {
                 current.setConvUsr1Id(getUsrActual());
                 current.setConvUsr2Id(getUsrDestino());
                 getFacade().create(current);
+                listaConversacion.add(current);
+                items = new ListDataModel(getListaConversacion());
                 JsfUtil.addSuccessMessage("Conversación nueva creada");
-                recreateModel();
-                //setExiste_conv(false);
-                
             }
-//            HashSet<Usuarios> hashSet = new HashSet(lista_conv);
-//            lista_conv = new ArrayList<>();
-//            //Eliminamos Usuarios repetidos
-//            for (Iterator it = hashSet.iterator(); it.hasNext();) {
-//                lista_conv.add((Conversacion) it.next());
-//            }
-//            if (lista_conv.isEmpty()) {
-//                recreateModel();
-//                current = new Conversacion();
-//                current.setConvAsunto(" ");
-//                Date fechaActual = new Date();
-//                current.setConvUltimo(fechaActual);
-//                current.setConvNumero(0);
-//                current.setConvUsr1Id(getUsrActual());
-//                current.setConvUsr2Id(getUsrDestino());
-//                getFacade().create(current);
-//                JsfUtil.addSuccessMessage("Conversación nueva creada");
-//                recreateModel();
-//                setExiste_conv(false);
-//            } else {
-//                if (lista_conv.get(0).getMensajeCollection().isEmpty()) {
-//                    JsfUtil.addSuccessMessage("Esta conversación esta vacia !!!");
-//                    setCurrent(lista_conv.get(0));
-//                    destroy();
-//                    recreateModel();
-//                    cargarConversacion();
-//                    return;
-//                } else {                    
-//                    current = lista_conv.get(0);
-//                    JsfUtil.addSuccessMessage("Collection null: " + current.getMensajeCollection().isEmpty());
-//                    List<Mensaje> msj = (List<Mensaje>) current.getMensajeCollection();
-//                    JsfUtil.addSuccessMessage("Remitente: " + msj.get(0).getMsjRemitente().getUsrNombres());
-//                    //Leer mensajes si el usuario destinatario es el actual y si no es está leído el mensaje
-//                    if (msj.get(msj.size()).getMsjDestinatario().getUsrId() == getUsrActual().getUsrId())//si el usuario actual es a quien le envian el msj cambiarlo a true
-//                    {
-//                        JsfUtil.addSuccessMessage("marca5");
-//                        leerMensajes();
-//                    }
-//                    JsfUtil.addSuccessMessage("marca4");
-//                    if (current.getConvAsunto().compareTo(" ") == 0) {
-//                        setExiste_conv(false);
-//                        JsfUtil.addSuccessMessage("marca3");
-//                    } else {
-//                        JsfUtil.addSuccessMessage("marca2");
-//                        setExiste_conv(true);
-//                    }
-//                    JsfUtil.addSuccessMessage("La conversación existe, cargando ...");
-//                }
-//            }
-//            setConv_select(current);
-//            //cargarConversaciones();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/conversacion/List.xhtml");
+//            FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/conversacion/List.xhtml");
         } catch (Exception e) {
             JsfUtil.addErrorMessage("Error al cargar las conversaciones... : " + e + " Localize: " + e.getLocalizedMessage() + "  cause:   " + e.getCause());
         }
@@ -448,12 +388,11 @@ public class ConversacionController implements Serializable {
 
     public void setUsrDestino(Usuarios usrDestino) throws IOException {
         try {
-            JsfUtil.addSuccessMessage("Set usr Destino");
             this.usrDestino = usrDestino;
             setUsrActual(UsuariosController.getCurrent());
-            JsfUtil.addSuccessMessage("Destino"+ getUsrDestino().getUsrNombres());
+            setCurrent(null);
             cargarConversacion();
-        } catch (Exception e) {
+        } catch (IOException e) {
             JsfUtil.addErrorMessage("Error al asignar el usuario destino o al cargar la conversación");
         }
     }

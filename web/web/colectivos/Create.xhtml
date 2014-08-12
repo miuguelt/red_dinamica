@@ -15,20 +15,10 @@
             </h:panelGroup>
             <h:form>
                 <h:panelGrid columns="2">
-                    <h:outputLabel value="#{bundle.CreateColectivosLabel_colectId}" for="colectId" />
-                    <h:inputText id="colectId" value="#{colectivosController.selected.colectId}" title="#{bundle.CreateColectivosTitle_colectId}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectId}"/>
                     <h:outputLabel value="#{bundle.CreateColectivosLabel_colectTitulo}" for="colectTitulo" />
                     <h:inputText id="colectTitulo" value="#{colectivosController.selected.colectTitulo}" title="#{bundle.CreateColectivosTitle_colectTitulo}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectTitulo}"/>
                     <h:outputLabel value="#{bundle.CreateColectivosLabel_colectDescripcion}" for="colectDescripcion" />
                     <h:inputTextarea rows="4" cols="30" id="colectDescripcion" value="#{colectivosController.selected.colectDescripcion}" title="#{bundle.CreateColectivosTitle_colectDescripcion}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectDescripcion}"/>
-                    <h:outputLabel value="#{bundle.CreateColectivosLabel_colectFecha}" for="colectFecha" />
-                    <h:inputText id="colectFecha" value="#{colectivosController.selected.colectFecha}" title="#{bundle.CreateColectivosTitle_colectFecha}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectFecha}">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </h:inputText>
-                    <h:outputLabel value="#{bundle.CreateColectivosLabel_colectUsrId}" for="colectUsrId" />
-                    <h:selectOneMenu id="colectUsrId" value="#{colectivosController.selected.colectUsrId}" title="#{bundle.CreateColectivosTitle_colectUsrId}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectUsrId}">
-                        <f:selectItems value="#{usuariosController.itemsAvailableSelectOne}"/>
-                    </h:selectOneMenu>
                 </h:panelGrid>
                 <br />
                 <h:commandLink action="#{colectivosController.create}" value="#{bundle.CreateColectivosSaveLink}" />
