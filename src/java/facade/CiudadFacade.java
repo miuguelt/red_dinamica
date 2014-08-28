@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package facade;
 
 import clases.Ciudad;
@@ -15,10 +17,11 @@ import javax.persistence.TypedQuery;
 
 /**
  *
- * @author Miguel
+ * @author entorno
  */
 @Stateless
 public class CiudadFacade extends AbstractFacade<Ciudad> {
+
     @PersistenceContext(unitName = "red_dinamicaPU")
     private EntityManager em;
 
@@ -31,7 +34,7 @@ public class CiudadFacade extends AbstractFacade<Ciudad> {
         super(Ciudad.class);
     }
     //Este es mi código
-    
+
     public List<Ciudad> ciudadesSelecionadas(Integer departamento_id) {
         try {
             String cadena = "SELECT * FROM Ciudad c WHERE c.ciudad_departamento =" + departamento_id;
@@ -41,6 +44,6 @@ public class CiudadFacade extends AbstractFacade<Ciudad> {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al consultar la BD: " + e + "\nLocalize: " + e.getLocalizedMessage(), "Error bd");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
-            }
         }
+    }
 }

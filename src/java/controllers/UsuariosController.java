@@ -227,7 +227,7 @@ public class UsuariosController implements Serializable {
 
     }
 
-        //Codigo personal
+    //Codigo personal
     public static Usuarios getCurrent() {
         return current;
     }
@@ -237,6 +237,7 @@ public class UsuariosController implements Serializable {
     }
 
     public String encriptarPass(String palabra) {
+
         PasswordService pws = PasswordService.getInstance();
         String hash = null;
         try {
@@ -337,6 +338,7 @@ public class UsuariosController implements Serializable {
     public void setListaUs(List<Universidades> listaUs) {
         this.listaUs = listaUs;
     }
+
     public String getFiltar_por() {
         return filtrar_por;
     }
@@ -368,8 +370,7 @@ public class UsuariosController implements Serializable {
     public void setU_select(Universidades u_select) {
         this.u_select = u_select;
     }
-    
-    
+
     public List<Usuarios> getContactos() {
         contactos = new ArrayList<>();
         if (getCurrent().getUsuariosCollection() != null && !getCurrent().getUsuariosCollection().isEmpty()) {
@@ -527,5 +528,4 @@ public class UsuariosController implements Serializable {
         }
     }
 
-    
 }

@@ -1,19 +1,15 @@
 package controllers;
 
 import clases.Archivos;
-import clases.Colectivos;
-import clases.Formaparte;
-import clases.Foros;
+import clases.Version;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
-import facade.ColectivosFacade;
-import java.io.IOException;
+import facade.VersionFacade;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -25,28 +21,28 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 
-@Named("colectivosController")
+@Named("versionController")
 @SessionScoped
-public class ColectivosController implements Serializable {
+public class VersionController implements Serializable {
 
     private DataModel items = null;
     @EJB
-    private facade.ColectivosFacade ejbFacade;
+    private facade.VersionFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
-    public ColectivosController() {
+    public VersionController() {
     }
 
-    public Colectivos getSelected() {
+    public Version getSelected() {
         if (current == null) {
-            current = new Colectivos();
+            current = new Version();
             selectedItemIndex = -1;
         }
         return current;
     }
 
-    private ColectivosFacade getFacade() {
+    private VersionFacade getFacade() {
         return ejbFacade;
     }
 
@@ -74,13 +70,13 @@ public class ColectivosController implements Serializable {
     }
 
     public String prepareView() {
-        current = (Colectivos) getItems().getRowData();
+        current = (Version) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
 
     public String prepareEdit() {
-        current = (Colectivos) getItems().getRowData();
+        current = (Version) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
@@ -88,7 +84,7 @@ public class ColectivosController implements Serializable {
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ColectivosUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("VersionUpdated"));
             return "View";
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
@@ -97,7 +93,7 @@ public class ColectivosController implements Serializable {
     }
 
     public String destroy() {
-        current = (Colectivos) getItems().getRowData();
+        current = (Version) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         performDestroy();
         recreatePagination();
@@ -121,7 +117,7 @@ public class ColectivosController implements Serializable {
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ColectivosDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("VersionDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
         }
@@ -170,21 +166,21 @@ public class ColectivosController implements Serializable {
         return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
     }
 
-    public Colectivos getColectivos(java.lang.Integer id) {
+    public Version getVersion(java.lang.Integer id) {
         return ejbFacade.find(id);
     }
 
-    @FacesConverter(forClass = Colectivos.class)
-    public static class ColectivosControllerConverter implements Converter {
+    @FacesConverter(forClass = Version.class)
+    public static class VersionControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            ColectivosController controller = (ColectivosController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "colectivosController");
-            return controller.getColectivos(getKey(value));
+            VersionController controller = (VersionController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "versionController");
+            return controller.getVersion(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -204,128 +200,63 @@ public class ColectivosController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Colectivos) {
-                Colectivos o = (Colectivos) object;
-                return getStringKey(o.getColectId());
+            if (object instanceof Version) {
+                Version o = (Version) object;
+                return getStringKey(o.getVersionId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Colectivos.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Version.class.getName());
             }
         }
 
     }
 
     //CODIGO PERSONAL
-    private static Colectivos current;
-    private static Colectivos colectivoActual;
-    private DataModel itemsAdministrador = null;
-    private DataModel itemsColaborador = null;
-    private List<Colectivos> colectivosColaboradorList = new ArrayList<>();
-    private List<Colectivos> colectivosAllList;
-    private List<Colectivos> colectivosAdminList;
+    private Version current = new Version();
+    private static Archivos archivoActual = new Archivos();
 
-    @PostConstruct
-    public void init(){
-        setColectivosAllList(getFacade().findAll());
-        setcolectivosColaboradorList();
-        setColectivosAdminList(new ArrayList<>(UsuariosController.getCurrent().getColectivosCollection1()));
-        AsignarEstadoAll();
+    public Archivos getArchivoActual() {
+        return archivoActual;
     }
 
-    public static Colectivos getColectivoActual() {
-        return colectivoActual;
+    public static void setArchivoActual(Archivos archivoActual) {
+        VersionController.archivoActual = archivoActual;
     }
 
-    public void setColectivoActual(Colectivos colectivoActual) {
-        ColectivosController.colectivoActual = colectivoActual;
-    }
- 
-   public void setColectivosAdminList(List<Colectivos> colectivosAdminList) {
-        this.colectivosAdminList = colectivosAdminList;
-    }
-
-    public void setColectivosAllList(List<Colectivos> colectivos) {
-        this.colectivosAllList = colectivos;
-    }
-
-    public void setColectivosColaboradorList(List<Colectivos> colectivosColaboradorList) {
-        this.colectivosColaboradorList = colectivosColaboradorList;
-    }
-
-    public void setcolectivosColaboradorList() {
-        List<Formaparte> formaparteColaboradorList = new ArrayList<>(UsuariosController.getCurrent().getFormaparteCollection());
-        for (int i = 0; i < formaparteColaboradorList.size(); i++) {
-            colectivosColaboradorList.add(formaparteColaboradorList.get(i).getColectivos());
-        }
-    }
-
-    public DataModel getItemsAdministrador() {
-        return itemsAdministrador = new ListDataModel(colectivosAdminList);
-    }
-
-    public DataModel getItemsColaborador() {
-        return itemsColaborador = new ListDataModel(colectivosColaboradorList);
+    public void setCurrent(Version current) {
+        this.current = current;
     }
 
     public DataModel getItems() {
 //        if (items == null) {
 //            items = getPagination().createPageDataModel();
 //        }
-        return items = new ListDataModel(colectivosAllList);
+        return items = new ListDataModel((List) getArchivoActual().getVersionCollection());
     }
 
-    public static Colectivos getCurrent() {
-        return current;
-    }
-
-    public static void setCurrent(Colectivos current) {
-        ColectivosController.current = current;
-    }
-
-    public void setColectivo(Colectivos colectivo) throws IOException {
-        setColectivoActual(colectivo);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/foros/List.xhtml");
-    }
-
-    public void prepareCreate() {
-        current = new Colectivos();
+    public String prepareCreate() {
+        current = new Version();
         selectedItemIndex = -1;
+        return "Create";
     }
 
-    public void create() {
+    public String create() {
         try {
             asignarTodo();
             getFacade().create(current);
-            recreateModel();
-            colectivosAllList.add(current);
-            items = new ListDataModel(colectivosAllList);
-            UsuariosController.getCurrent().getColectivosCollection1().add(current);
-            prepareCreate();
-            //FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/foros/List.xhtml");
+            getArchivoActual().getVersionCollection().add(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("VersionCreated"));
+            return prepareCreate();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("error en version"));
+
+            return null;
         }
     }
 
     public void asignarTodo() {
-        current.setColectFecha(new Date());
-        current.setColectUsrId(UsuariosController.getCurrent());
-    }
-
-    public void AsignarEstadoAll() {
-        for (int i = 0; i < colectivosColaboradorList.size(); i++) {
-            colectivosAllList.get(colectivosAllList.indexOf(colectivosColaboradorList.get(i))).setColectEstado(Boolean.TRUE);
-        }
-        for (int i = 0; i < colectivosAdminList.size(); i++) {
-            colectivosAllList.get(colectivosAllList.indexOf(colectivosAdminList.get(i))).setColectEstado(Boolean.TRUE);
-        }
-        items = new ListDataModel(colectivosAllList);
-    }
-
-    public void AsignarEstado(Colectivos colectivo) {
-        setCurrent(colectivo);
-        current.setColectEstado(true);
-        colectivosAllList.get(colectivosAllList.indexOf(current)).setColectEstado(true);
-        colectivosColaboradorList.add(current);
-
+        current.setVersionFecha(new Date());
+        current.setVersionArchivoId(getArchivoActual());
+        current.setVersionNumero(getArchivoActual().getVersionCollection().size()+1);
     }
 }

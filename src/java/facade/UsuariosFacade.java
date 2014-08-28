@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package facade;
 
 import clases.Usuarios;
+import controllers.util.JsfUtil;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
@@ -21,6 +21,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class UsuariosFacade extends AbstractFacade<Usuarios> {
+
     @PersistenceContext(unitName = "red_dinamicaPU")
     private EntityManager em;
 
@@ -32,7 +33,23 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> {
     public UsuariosFacade() {
         super(Usuarios.class);
     }
- 
+
+    public void actulizarEm(Usuarios usuario) {
+
+        em.merge(usuario);
+        JsfUtil.addSuccessMessage("Merge");
+        try {
+            em.flush();
+            em.clear();
+        } catch (Exception e) {
+            JsfUtil.addSuccessMessage("Error actuliar em");
+            em.refresh(usuario);
+            em.clear();
+            em.getEntityManagerFactory().getCache().evictAll();
+        }
+    }
+
+
     public boolean validarLogueo(String cedula, String contrasena) {
         int ced = Integer.parseInt(cedula);
         String sentencia = "SELECT * FROM Usuarios u WHERE u.usrId = '" + ced + "' AND u.usrPassword = '" + contrasena + "'";
@@ -40,6 +57,7 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> {
         Query q = em.createNativeQuery(sentencia, Usuarios.class);
         return q.getResultList().size() == 1;
     }
+
     public List<Usuarios> buscarUsuariosActivos() {
         try {
             String sentencia = "SELECT * FROM Usuarios u WHERE  u.usr_estado = 1";
@@ -52,5 +70,5 @@ public class UsuariosFacade extends AbstractFacade<Usuarios> {
         }
         return null;
     }
-   
+
 }

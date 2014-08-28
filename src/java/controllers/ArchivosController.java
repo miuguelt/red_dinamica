@@ -1,11 +1,16 @@
-package controllers;
+ package controllers;
 
 import clases.Archivos;
+import clases.Version;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
 import facade.ArchivosFacade;
+import facade.VersionFacade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -22,16 +27,18 @@ import javax.faces.model.SelectItem;
 @SessionScoped
 public class ArchivosController implements Serializable {
 
-    private Archivos current;
+    @EJB
+    private VersionFacade versionFacade;
+    
     private DataModel items = null;
     @EJB
     private facade.ArchivosFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
-
+    
     public ArchivosController() {
     }
-
+    
     public Archivos getSelected() {
         if (current == null) {
             current = new Archivos();
@@ -39,20 +46,20 @@ public class ArchivosController implements Serializable {
         }
         return current;
     }
-
+    
     private ArchivosFacade getFacade() {
         return ejbFacade;
     }
-
+    
     public PaginationHelper getPagination() {
         if (pagination == null) {
             pagination = new PaginationHelper(10) {
-
+                
                 @Override
                 public int getItemsCount() {
                     return getFacade().count();
                 }
-
+                
                 @Override
                 public DataModel createPageDataModel() {
                     return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
@@ -61,41 +68,24 @@ public class ArchivosController implements Serializable {
         }
         return pagination;
     }
-
+    
     public String prepareList() {
         recreateModel();
         return "List";
     }
-
+    
     public String prepareView() {
         current = (Archivos) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
-
-    public String prepareCreate() {
-        current = new Archivos();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ArchivosCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
+    
     public String prepareEdit() {
         current = (Archivos) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
-
+    
     public String update() {
         try {
             getFacade().edit(current);
@@ -106,7 +96,7 @@ public class ArchivosController implements Serializable {
             return null;
         }
     }
-
+    
     public String destroy() {
         current = (Archivos) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
@@ -115,7 +105,7 @@ public class ArchivosController implements Serializable {
         recreateModel();
         return "List";
     }
-
+    
     public String destroyAndView() {
         performDestroy();
         recreateModel();
@@ -128,7 +118,7 @@ public class ArchivosController implements Serializable {
             return "List";
         }
     }
-
+    
     private void performDestroy() {
         try {
             getFacade().remove(current);
@@ -137,7 +127,7 @@ public class ArchivosController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
         }
     }
-
+    
     private void updateCurrentItem() {
         int count = getFacade().count();
         if (selectedItemIndex >= count) {
@@ -152,49 +142,42 @@ public class ArchivosController implements Serializable {
             current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
         }
     }
-
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
-    }
-
+    
     private void recreateModel() {
         items = null;
     }
-
+    
     private void recreatePagination() {
         pagination = null;
     }
-
+    
     public String next() {
         getPagination().nextPage();
         recreateModel();
         return "List";
     }
-
+    
     public String previous() {
         getPagination().previousPage();
         recreateModel();
         return "List";
     }
-
+    
     public SelectItem[] getItemsAvailableSelectMany() {
         return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
     }
-
+    
     public SelectItem[] getItemsAvailableSelectOne() {
         return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
     }
-
+    
     public Archivos getArchivos(java.lang.Integer id) {
         return ejbFacade.find(id);
     }
-
+    
     @FacesConverter(forClass = Archivos.class)
     public static class ArchivosControllerConverter implements Converter {
-
+        
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
@@ -204,19 +187,19 @@ public class ArchivosController implements Serializable {
                     getValue(facesContext.getELContext(), null, "archivosController");
             return controller.getArchivos(getKey(value));
         }
-
+        
         java.lang.Integer getKey(String value) {
             java.lang.Integer key;
             key = Integer.valueOf(value);
             return key;
         }
-
+        
         String getStringKey(java.lang.Integer value) {
             StringBuilder sb = new StringBuilder();
             sb.append(value);
             return sb.toString();
         }
-
+        
         @Override
         public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
             if (object == null) {
@@ -229,7 +212,73 @@ public class ArchivosController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Archivos.class.getName());
             }
         }
-
+        
     }
 
+    //CODIGO PERSONAL
+    private static Archivos current;
+    private Archivos archivoSelect;
+    @EJB
+    private facade.VersionFacade ejbVersionFacade;
+    
+    public static Archivos getCurrent() {
+        return current;
+    }
+    
+    public Archivos getArchivoSelect() {
+        return archivoSelect;
+    }
+    
+    public void setArchivoSelect(Archivos archivoSelect) {
+        this.archivoSelect = archivoSelect;
+    }
+    
+    public DataModel getItems() {
+//        if (items == null) {
+//            items = getPagination().createPageDataModel();
+//        }
+        return items = new ListDataModel((List) ColectivosController.getColectivoActual().getArchivosCollection());
+    }
+    
+    public String prepareCreate() {
+        current = new Archivos();
+        selectedItemIndex = -1;
+        return "Create";
+    }
+    
+    public void create() {
+        try {
+            asignarTodo();
+            getFacade().create(current);
+            Version version = new Version(current, new Date(), 1);
+            ejbVersionFacade.create(version);
+            List<Version> listaV = new ArrayList<>();
+            listaV.add(version);
+            current.setVersionCollection(listaV);
+            if (!ColectivosController.getColectivoActual().getArchivosCollection().isEmpty()) {
+                ColectivosController.getColectivoActual().getArchivosCollection().add(current);
+            } else {
+                List<Archivos> lista = new ArrayList<>();
+                lista.add(current);
+                ColectivosController.getColectivoActual().setArchivosCollection(lista);
+            }
+            setArchivoSelect(current);
+            VersionController.setArchivoActual(current);
+            JsfUtil.addSuccessMessage("Version"+new VersionController().getItems());
+            prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("Error Archivo"));
+        }
+    }
+    
+    public void asignarTodo() {
+        current.setArchivoUsrId(UsuariosController.getCurrent());
+        current.setArchivoColectivoId(ColectivosController.getColectivoActual());
+        current.setArchivoVisitas(0);
+    }
+    
+    public void rowSelect() {
+        JsfUtil.addSuccessMessage("Row select");
+        VersionController.setArchivoActual(getArchivoSelect());
+    }    
 }

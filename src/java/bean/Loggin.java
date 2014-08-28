@@ -5,14 +5,15 @@ import com.sun.xml.ws.developer.Serialization;
 import controllers.UsuariosController;
 import controllers.util.JsfUtil;
 import controllers.util.PasswordService;
+import facade.UsuariosFacade;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import facade.UsuariosFacade;
 
 @ManagedBean(name = "loggin")
 @SessionScoped
@@ -26,7 +27,7 @@ public class Loggin implements InterfaceBean {
     private String usrTipo;
 
     @EJB
-    private UsuariosFacade usr;
+    private facade.UsuariosFacade usr;
 
     public Loggin(String cedula, String contrasena) {
         this.cedula = cedula;
@@ -114,19 +115,19 @@ public class Loggin implements InterfaceBean {
         try {
             Usuarios user;
             int cedu = Integer.parseInt(cedula);
-            setContrasena(encriptarPass(this.contrasena)); 
+            setContrasena(encriptarPass(this.contrasena));
             user = (Usuarios) usr.find(cedu);
             if (user != null && user.getUsrPass().trim().matches(this.contrasena)) {
                 UsuariosController.setCurrent(user);
-                usrActual = usuarioActual();
+                usrActual = user;
                 setUsrActual(usrActual);
                 FacesContext context2 = FacesContext.getCurrentInstance();
                 HttpSession sessionv = (HttpSession) context2.getExternalContext().getSession(true);
                 sessionv.setAttribute("user", usrActual);
                 session.setActiva(true);
-
+                JsfUtil.addSuccessMessage("Sesion Iniciada");
                 //FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
-                irA("perfiles");
+//                irA("perfiles");
             } else {
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Verifique cédula y/o contraseña!", ""));
@@ -143,13 +144,17 @@ public class Loggin implements InterfaceBean {
     public Usuarios usuarioActual() {
         return UsuariosController.getCurrent();
     }
-
+    
     public void cerrarSesion() throws IOException {
-        UsuariosController.setCurrent(null);
-        UsuariosController.setCurrent(new Usuarios());
+        usr.actulizarEm(UsuariosController.getCurrent());
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpSession session2 = (HttpSession) ec.getSession(false);
+        session2.invalidate();
         session.setActiva(false);
-//        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
+        UsuariosController.setCurrent(null);
+        JsfUtil.addSuccessMessage("Cerrar sesion");
+//        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
+
     }
 
     public void irA(String dire) throws IOException {

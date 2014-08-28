@@ -45,6 +45,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Colectivos.findByColectTitulo", query = "SELECT c FROM Colectivos c WHERE c.colectTitulo = :colectTitulo"),
     @NamedQuery(name = "Colectivos.findByColectFecha", query = "SELECT c FROM Colectivos c WHERE c.colectFecha = :colectFecha")})
 public class Colectivos implements Serializable {
+    @Column(name = "colect_estado")
+    private Boolean colectEstado;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "colectivos")
+    private Collection<Formaparte> formaparteCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -184,6 +188,23 @@ public class Colectivos implements Serializable {
     @Override
     public String toString() {
         return "clases.Colectivos[ colectId=" + colectId + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Formaparte> getFormaparteCollection() {
+        return formaparteCollection;
+    }
+
+    public void setFormaparteCollection(Collection<Formaparte> formaparteCollection) {
+        this.formaparteCollection = formaparteCollection;
+    }
+
+    public Boolean getColectEstado() {
+        return colectEstado;
+    }
+
+    public void setColectEstado(Boolean colectEstado) {
+        this.colectEstado = colectEstado;
     }
     
 }

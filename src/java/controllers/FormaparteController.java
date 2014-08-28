@@ -1,18 +1,16 @@
 package controllers;
 
-import clases.Ciudad;
-import clases.Universidades;
+import clases.Colectivos;
+import clases.Formaparte;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
-import facade.UniversidadesFacade;
+import facade.FormaparteFacade;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
+import javax.inject.Named;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -21,30 +19,27 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 
-@Named("universidadesController")
+@Named("formaparteController")
 @SessionScoped
-public class UniversidadesController implements Serializable {
-
-    private Universidades current;
-    private DataModel items = null;
+public class FormaparteController implements Serializable {
+    
+    private static Formaparte current;
     @EJB
-    private facade.UniversidadesFacade ejbFacade;
+    private facade.FormaparteFacade ejbFacade;
+    private DataModel items = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
-    public UniversidadesController() {
+    public FormaparteController() {
     }
 
-    public Universidades getSelected() {
+    public Formaparte getSelected() {
         if (current == null) {
-            current = new Universidades();
+            current = new Formaparte();
+            current.setFormapartePK(new clases.FormapartePK());
             selectedItemIndex = -1;
         }
         return current;
-    }
-
-    private UniversidadesFacade getFacade() {
-        return ejbFacade;
     }
 
     public PaginationHelper getPagination() {
@@ -71,38 +66,23 @@ public class UniversidadesController implements Serializable {
     }
 
     public String prepareView() {
-        current = (Universidades) getItems().getRowData();
+        current = (Formaparte) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
 
-    public String prepareCreate() {
-        current = new Universidades();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UniversidadesCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
     public String prepareEdit() {
-        current = (Universidades) getItems().getRowData();
+        current = (Formaparte) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
 
     public String update() {
         try {
+            current.getFormapartePK().setFormaColectId(current.getColectivos().getColectId());
+            current.getFormapartePK().setFormaUsrId(current.getUsuarios().getUsrId());
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UniversidadesUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("FormaparteUpdated"));
             return "View";
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
@@ -111,7 +91,7 @@ public class UniversidadesController implements Serializable {
     }
 
     public String destroy() {
-        current = (Universidades) getItems().getRowData();
+        current = (Formaparte) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         performDestroy();
         recreatePagination();
@@ -135,7 +115,7 @@ public class UniversidadesController implements Serializable {
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UniversidadesDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("FormaparteDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
         }
@@ -191,32 +171,40 @@ public class UniversidadesController implements Serializable {
         return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
     }
 
-    public Universidades getUniversidades(java.lang.Integer id) {
+    public Formaparte getFormaparte(clases.FormapartePK id) {
         return ejbFacade.find(id);
     }
 
-    @FacesConverter(forClass = Universidades.class)
-    public static class UniversidadesControllerConverter implements Converter {
+    @FacesConverter(forClass = Formaparte.class)
+    public static class FormaparteControllerConverter implements Converter {
+
+        private static final String SEPARATOR = "#";
+        private static final String SEPARATOR_ESCAPED = "\\#";
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            UniversidadesController controller = (UniversidadesController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "universidadesController");
-            return controller.getUniversidades(getKey(value));
+            FormaparteController controller = (FormaparteController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "formaparteController");
+            return controller.getFormaparte(getKey(value));
         }
 
-        java.lang.Integer getKey(String value) {
-            java.lang.Integer key;
-            key = Integer.valueOf(value);
+        clases.FormapartePK getKey(String value) {
+            clases.FormapartePK key;
+            String values[] = value.split(SEPARATOR_ESCAPED);
+            key = new clases.FormapartePK();
+            key.setFormaUsrId(Integer.parseInt(values[0]));
+            key.setFormaColectId(Integer.parseInt(values[1]));
             return key;
         }
 
-        String getStringKey(java.lang.Integer value) {
+        String getStringKey(clases.FormapartePK value) {
             StringBuilder sb = new StringBuilder();
-            sb.append(value);
+            sb.append(value.getFormaUsrId());
+            sb.append(SEPARATOR);
+            sb.append(value.getFormaColectId());
             return sb.toString();
         }
 
@@ -225,43 +213,54 @@ public class UniversidadesController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Universidades) {
-                Universidades o = (Universidades) object;
-                return getStringKey(o.getUniversidadId());
+            if (object instanceof Formaparte) {
+                Formaparte o = (Formaparte) object;
+                return getStringKey(o.getFormapartePK());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Universidades.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Formaparte.class.getName());
             }
         }
 
     }
+    //Codigo personal
 
-    //MI CODIGO
-    Ciudad ciudad;
-    public void asignarCiudad(FacesContext arg0, UIComponent arg1, Object arg2) {
+    public Formaparte getCurrent() {
+        return current;
+    }
+
+    public static void setCurrent(Formaparte current) {
+        FormaparteController.current = current;
+    }
+
+    private FormaparteFacade getFacade() {
+        return ejbFacade;
+    }
+
+    public void prepareCreate() {
+        current = new Formaparte();
+        current.setFormapartePK(new clases.FormapartePK());
+        selectedItemIndex = -1;
+    }
+
+    public void create() {
         try {
-
-            this.ciudad = (Ciudad) arg2;
-
+            current.getFormapartePK().setFormaColectId(current.getColectivos().getColectId());
+            current.getFormapartePK().setFormaUsrId(current.getUsuarios().getUsrId());
+            getFacade().create(current);
+            prepareCreate();
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("FormaparteCreated"));
         } catch (Exception e) {
-}
-    }
-    private List<Universidades> universidad;
-  
-    public List<Universidades> getUniversidad() {
-        return universidad;
-    }
-
-    public void setUniversidad(List<Universidades> universidad) {
-        this.universidad = universidad;
-    }
-
-    public void asignarUniversidades() {
-        try {
-
-            universidad = ejbFacade.UniversidadSelecionadas(ciudad.getCiudadId());
-        } catch (Exception e) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Mi ciudad:" + ciudad + "Error: ", "" + e + "   " + e.getLocalizedMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
         }
+    }
+
+    public void asignarTodo(Colectivos colectivo) {
+        JsfUtil.addSuccessMessage("Asignar todo");
+        prepareCreate();
+        current.setColectivos(colectivo);
+        current.setUsuarios(UsuariosController.getCurrent());
+        current.setFormaEstado(true);
+        UsuariosController.getCurrent().getFormaparteCollection().add(current);
+        create();
     }
 }

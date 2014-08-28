@@ -4,7 +4,6 @@ import clases.Departamentos;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
 import facade.DepartamentosFacade;
-
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -47,6 +46,7 @@ public class DepartamentosController implements Serializable {
     public PaginationHelper getPagination() {
         if (pagination == null) {
             pagination = new PaginationHelper(10) {
+
                 @Override
                 public int getItemsCount() {
                     return getFacade().count();
@@ -228,5 +228,7 @@ public class DepartamentosController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Departamentos.class.getName());
             }
         }
+
     }
+
 }

@@ -2,8 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
@@ -17,7 +16,6 @@
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.CreateDepartamentosLabel_departamentoId}" for="departamentoId" />
                     <h:inputText id="departamentoId" value="#{departamentosController.selected.departamentoId}" title="#{bundle.CreateDepartamentosTitle_departamentoId}" required="true" requiredMessage="#{bundle.CreateDepartamentosRequiredMessage_departamentoId}"/>
-                    
                     <h:outputLabel value="#{bundle.CreateDepartamentosLabel_departamentoNombre}" for="departamentoNombre" />
                     <h:inputText id="departamentoNombre" value="#{departamentosController.selected.departamentoNombre}" title="#{bundle.CreateDepartamentosTitle_departamentoNombre}" />
                 </h:panelGrid>

@@ -5,7 +5,8 @@
  */
 package facade;
 
-import clases.Departamentos;
+import clases.Formaparte;
+import controllers.util.JsfUtil;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +16,8 @@ import javax.persistence.PersistenceContext;
  * @author entorno
  */
 @Stateless
-public class DepartamentosFacade extends AbstractFacade<Departamentos> {
+public class FormaparteFacade extends AbstractFacade<Formaparte> {
+
     @PersistenceContext(unitName = "red_dinamicaPU")
     private EntityManager em;
 
@@ -24,8 +26,15 @@ public class DepartamentosFacade extends AbstractFacade<Departamentos> {
         return em;
     }
 
-    public DepartamentosFacade() {
-        super(Departamentos.class);
+    public FormaparteFacade() {
+        super(Formaparte.class);
     }
-    
+
+//    public void actulizarEm(Formaparte formaparte) {
+//        em.merge(formaparte);
+////        JsfUtil.addSuccessMessage("Entity");
+//                
+//        //em.flush();
+//    }
+
 }

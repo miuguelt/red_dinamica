@@ -3,37 +3,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <ui:composition template="/template.xhtml">
-        <ui:define name="title">
+        <ui:define name="title">            
             <h:outputText value="#{bundle.CreateComentariosTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
-            <h:panelGroup id="messagePanel" layout="block">
-                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-            </h:panelGroup>
-            <h:form>
+            <h:form id="comentariosCreateForm" >
                 <h:panelGrid columns="2">
-                    <h:outputLabel value="#{bundle.CreateComentariosLabel_comentId}" for="comentId" />
-                    <h:inputText id="comentId" value="#{comentariosController.selected.comentId}" title="#{bundle.CreateComentariosTitle_comentId}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentId}"/>
                     <h:outputLabel value="#{bundle.CreateComentariosLabel_comentDescripcion}" for="comentDescripcion" />
                     <h:inputText id="comentDescripcion" value="#{comentariosController.selected.comentDescripcion}" title="#{bundle.CreateComentariosTitle_comentDescripcion}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentDescripcion}"/>
-                    <h:outputLabel value="#{bundle.CreateComentariosLabel_comentFecha}" for="comentFecha" />
-                    <h:inputText id="comentFecha" value="#{comentariosController.selected.comentFecha}" title="#{bundle.CreateComentariosTitle_comentFecha}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentFecha}">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </h:inputText>
-                    <h:outputLabel value="#{bundle.CreateComentariosLabel_comentUsrId}" for="comentUsrId" />
-                    <h:selectOneMenu id="comentUsrId" value="#{comentariosController.selected.comentUsrId}" title="#{bundle.CreateComentariosTitle_comentUsrId}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentUsrId}">
-                        <f:selectItems value="#{usuariosController.itemsAvailableSelectOne}"/>
-                    </h:selectOneMenu>
-                    <h:outputLabel value="#{bundle.CreateComentariosLabel_comentForoId}" for="comentForoId" />
-                    <h:selectOneMenu id="comentForoId" value="#{comentariosController.selected.comentForoId}" title="#{bundle.CreateComentariosTitle_comentForoId}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentForoId}">
-                        <f:selectItems value="#{forosController.itemsAvailableSelectOne}"/>
-                    </h:selectOneMenu>
                 </h:panelGrid>
                 <br />
-                <h:commandLink action="#{comentariosController.create}" value="#{bundle.CreateComentariosSaveLink}" />
+                <p:commandButton actionListener="#{comentariosController.create}" value="#{bundle.CreateComentariosSaveLink}" update=":forosTabView:comentariosListForm,comentariosCreateForm" styleClass="ui-priority-primary"/>
                 <br />
                 <br />
                 <h:commandLink action="#{comentariosController.prepareList}" value="#{bundle.CreateComentariosShowAllLink}" immediate="true"/>

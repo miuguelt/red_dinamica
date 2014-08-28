@@ -32,13 +32,13 @@ public class UniversidadesFacade extends AbstractFacade<Universidades> {
     public UniversidadesFacade() {
         super(Universidades.class);
     }
-    
+
     //MI CODIGO
-         public List<Universidades> UniversidadSelecionadas(Integer ciudad_id) {
-        try {            
+    public List<Universidades> UniversidadSelecionadas(Integer ciudad_id) {
+        try {
             String cadena = "SELECT * FROM Universidades u WHERE u.universidad_ciudad =" + ciudad_id;
             TypedQuery<Universidades> query2 = (TypedQuery<Universidades>) em.createNativeQuery(cadena, Universidades.class);
-           
+
             return query2.getResultList();
         } catch (Exception e) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al consultar la BD: " + e + "\nLocalize: " + e.getLocalizedMessage(), "Error bd");
@@ -46,6 +46,4 @@ public class UniversidadesFacade extends AbstractFacade<Universidades> {
             return null;
         }
     }
-
-    
 }

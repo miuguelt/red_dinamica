@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package facade;
 
-import clases.Departamentos;
+import clases.Version;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author entorno
  */
 @Stateless
-public class DepartamentosFacade extends AbstractFacade<Departamentos> {
+public class VersionFacade extends AbstractFacade<Version> {
     @PersistenceContext(unitName = "red_dinamicaPU")
     private EntityManager em;
 
@@ -24,8 +25,8 @@ public class DepartamentosFacade extends AbstractFacade<Departamentos> {
         return em;
     }
 
-    public DepartamentosFacade() {
-        super(Departamentos.class);
+    public VersionFacade() {
+        super(Version.class);
     }
     
 }

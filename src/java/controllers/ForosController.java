@@ -6,6 +6,9 @@ import controllers.util.PaginationHelper;
 import facade.ForosFacade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -22,7 +25,6 @@ import javax.faces.model.SelectItem;
 @SessionScoped
 public class ForosController implements Serializable {
 
-    private Foros current;
     private DataModel items = null;
     @EJB
     private facade.ForosFacade ejbFacade;
@@ -71,23 +73,6 @@ public class ForosController implements Serializable {
         current = (Foros) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
-    }
-
-    public String prepareCreate() {
-        current = new Foros();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ForosCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
     }
 
     public String prepareEdit() {
@@ -151,13 +136,6 @@ public class ForosController implements Serializable {
         if (selectedItemIndex >= 0) {
             current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
         }
-    }
-
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
     }
 
     private void recreateModel() {
@@ -232,4 +210,58 @@ public class ForosController implements Serializable {
 
     }
 
+    //CODIGO PERSONAL
+    private Foros current;
+    private Foros foros_select = new Foros();
+    
+    public Foros getForos_select() {
+        return foros_select;
+    }
+
+    public void setForos_select(Foros foros_select){
+        this.foros_select = foros_select;
+    }
+
+    public DataModel getItems() {
+//        if (items == null) {
+//            items = getPagination().createPageDataModel();
+//        }
+        return items = new ListDataModel((List) ColectivosController.getColectivoActual().getForosCollection());
+    }
+
+    public void prepareCreate() {
+        current = new Foros();
+        selectedItemIndex = -1;
+    }
+
+    public void create() {
+        try {
+            asignarTodo();
+            getFacade().create(current);
+            if (!ColectivosController.getColectivoActual().getForosCollection().isEmpty()) {
+                recreateModel();
+                ColectivosController.getColectivoActual().getForosCollection().add(current);
+            } else {
+                List<Foros> lista = new ArrayList<>();
+                lista.add(current);
+                ColectivosController.getColectivoActual().setForosCollection(lista);
+            }
+            setForos_select(current);
+            prepareCreate();
+            JsfUtil.addSuccessMessage("Nuevo foro creado");
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+
+    public void asignarTodo() {
+        current.setForoFecha(new Date());
+        current.setForoUsrId(UsuariosController.getCurrent());
+        current.setForoColectId(ColectivosController.getColectivoActual());
+    }
+
+    public void RowSelect() {
+        JsfUtil.addSuccessMessage("Row select");
+        ComentariosController.setForoActual(foros_select);
+    }
 }

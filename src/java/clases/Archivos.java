@@ -45,6 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Archivos.findByArchivoTema", query = "SELECT a FROM Archivos a WHERE a.archivoTema = :archivoTema"),
     @NamedQuery(name = "Archivos.findByArchivoVisitas", query = "SELECT a FROM Archivos a WHERE a.archivoVisitas = :archivoVisitas")})
 public class Archivos implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "versionArchivoId")
+    private Collection<Version> versionCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -215,6 +217,15 @@ public class Archivos implements Serializable {
     @Override
     public String toString() {
         return "clases.Archivos[ archivoId=" + archivoId + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Version> getVersionCollection() {
+        return versionCollection;
+    }
+
+    public void setVersionCollection(Collection<Version> versionCollection) {
+        this.versionCollection = versionCollection;
     }
     
 }
