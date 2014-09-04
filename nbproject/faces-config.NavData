@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
-    <Scope Scope="Project"/>
+    <Scope Scope="Project">
+        <Node id="web/palabrasclave/Edit.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="web/respuestascoment/List.xhtml" x="900" y="1050" zoom="true"/>
+        <Node id="templates/generalTemplate.xhtml" x="650" y="900" zoom="true"/>
+        <Node id="web/departamentos/List.xhtml" x="1650" y="600" zoom="true"/>
+        <Node id="web/ciudad/Create.xhtml" x="1900" y="150" zoom="true"/>
+        <Node id="web/ciudad/List.xhtml" x="650" y="1350" zoom="true"/>
+        <Node id="web/universidades/List.xhtml" x="400" y="1350" zoom="true"/>
+        <Node id="web/eventos/Create.xhtml" x="150" y="1500" zoom="true"/>
+        <Node id="web/palabrasclave/View.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="web/comentarios/Create.xhtml" x="2150" y="600" zoom="true"/>
+        <Node id="web/comentarios/List.xhtml" x="2150" y="150" zoom="true"/>
+        <Node id="web/historialarchivos/View.xhtml" x="1650" y="750" zoom="true"/>
+        <Node id="web/mensaje/Edit.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="web/gruposinvestiga/List.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="componentes/menugeneral.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="web/noticias/List.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="web/departamentos/View.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="web/universidades/Edit.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="web/solicitudes/List.xhtml" x="1150" y="900" zoom="true"/>
+        <Node id="web/departamentos/Create.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="web/historialarchivos/List.xhtml" x="1900" y="300" zoom="true"/>
+        <Node id="web/conversacion/Edit.xhtml" x="1150" y="600" zoom="true"/>
+        <Node id="web/formaparte/List.xhtml" x="400" y="1650" zoom="true"/>
+        <Node id="web/eventos/Edit.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="web/departamentos/Edit.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="web/noticias/Edit.xhtml" x="900" y="1350" zoom="true"/>
+        <Node id="web/version/View.xhtml" x="2400" y="600" zoom="true"/>
+        <Node id="web/usuarios/View.xhtml" x="1900" y="750" zoom="true"/>
+        <Node id="web/formaparte/View.xhtml" x="1400" y="1200" zoom="true"/>
+        <Node id="componentes/menuregistro.xhtml" x="400" y="1500" zoom="true"/>
+        <Node id="web/conversacion/List.xhtml" x="1150" y="450" zoom="true"/>
+        <Node id="web/noticias/View.xhtml" x="1400" y="750" zoom="true"/>
+        <Node id="web/usuarios/Edit.xhtml" x="2150" y="450" zoom="true"/>
+        <Node id="componentes/piePagina.xhtml" x="900" y="600" zoom="true"/>
+        <Node id="web/usuarios/datosUsuario.xhtml" x="2150" y="300" zoom="true"/>
+        <Node id="web/palabrasclave/List.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="web/ciudad/Edit.xhtml" x="2900" y="300" zoom="true"/>
+        <Node id="web/solicitudes/Create.xhtml" x="400" y="1200" zoom="true"/>
+        <Node id="web/foros/List.xhtml" x="150" y="1350" zoom="true"/>
+        <Node id="web/version/Create.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="web/foros/View.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="web/formaparte/Create.xhtml" x="3150" y="150" zoom="true"/>
+        <Node id="web/respuestascoment/View.xhtml" x="1400" y="600" zoom="true"/>
+        <Node id="web/historialarchivos/Create.xhtml" x="1650" y="900" zoom="true"/>
+        <Node id="web/respuestascoment/Create.xhtml" x="1900" y="600" zoom="true"/>
+        <Node id="web/colectivos/Edit.xhtml" x="650" y="1050" zoom="true"/>
+        <Node id="web/usuarios/iniciarSesion.xhtml" x="2400" y="450" zoom="true"/>
+        <Node id="web/colectivos/Create.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="web/version/Edit.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="web/colectivos/List.xhtml" x="1650" y="450" zoom="true"/>
+        <Node id="web/ciudad/View.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="web/noticias/Create.xhtml" x="2400" y="150" zoom="true"/>
+        <Node id="web/solicitudes/Edit.xhtml" x="2400" y="300" zoom="true"/>
+        <Node id="web/mensaje/Create.xhtml" x="400" y="1050" zoom="true"/>
+        <Node id="web/foros/Create.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="web/usuarios/perfil.xhtml" x="900" y="1500" zoom="true"/>
+        <Node id="web/archivos/View.xhtml" x="150" y="1200" zoom="true"/>
+        <Node id="web/mensaje/List.xhtml" x="1650" y="1050" zoom="true"/>
+        <Node id="web/usuarios/Create.xhtml" x="1400" y="900" zoom="true"/>
+        <Node id="web/archivos/Create.xhtml" x="650" y="1500" zoom="true"/>
+        <Node id="web/universidades/View.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="web/palabrasclave/Create.xhtml" x="1150" y="1200" zoom="true"/>
+        <Node id="web/respuestascoment/Edit.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="web/gruposinvestiga/Create.xhtml" x="2650" y="150" zoom="true"/>
+        <Node id="web/foros/Edit.xhtml" x="650" y="1650" zoom="true"/>
+        <Node id="web/gruposinvestiga/View.xhtml" x="1900" y="900" zoom="true"/>
+        <Node id="web/archivos/Edit.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="web/universidades/Create.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="web/archivos/List.xhtml" x="900" y="1200" zoom="true"/>
+        <Node id="web/eventos/View.xhtml" x="400" y="900" zoom="true"/>
+        <Node id="web/historialarchivos/Edit.xhtml" x="400" y="1800" zoom="true"/>
+        <Node id="web/usuarios/List.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="componentes/banner.xhtml" x="2900" y="150" zoom="true"/>
+        <Node id="web/version/List.xhtml" x="2650" y="450" zoom="true"/>
+        <Node id="index.xhtml" x="1150" y="1050" zoom="true"/>
+        <Node id="web/solicitudes/View.xhtml" x="1400" y="1050" zoom="true"/>
+        <Node id="web/colectivos/View.xhtml" x="2150" y="750" zoom="true"/>
+        <Node id="web/gruposinvestiga/Edit.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="web/comentarios/View.xhtml" x="1150" y="1350" zoom="true"/>
+        <Node id="web/conversacion/View.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="web/formaparte/Edit.xhtml" x="150" y="1800" zoom="true"/>
+        <Node id="web/eventos/List.xhtml" x="1400" y="450" zoom="true"/>
+        <Node id="componentes/contactenos.xhtml" x="2650" y="300" zoom="true"/>
+        <Node id="web/mensaje/View.xhtml" x="650" y="1200" zoom="true"/>
+        <Node id="web/comentarios/Edit.xhtml" x="1900" y="450" zoom="true"/>
+        <Node id="web/conversacion/Create.xhtml" x="1150" y="750" zoom="true"/>
+    </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

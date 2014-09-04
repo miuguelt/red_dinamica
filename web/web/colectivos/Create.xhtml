@@ -5,14 +5,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-    <ui:composition template="/template.xhtml">
-        <ui:define name="title">
-            <h:outputText value="#{bundle.CreateColectivosTitle}"></h:outputText>
-        </ui:define>
-        <ui:define name="body">
-            <h:panelGroup id="messagePanel" layout="block">
-                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-            </h:panelGroup>
+    <ui:composition>
+
+        <p:dialog id="ColectivosCreateDlg" widgetVar="ColectivosCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="Crear Nuevo Colectivo">
             <h:form id="colectivosCreateForm">
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.CreateColectivosLabel_colectTitulo}" for="colectTitulo" />
@@ -21,15 +16,11 @@
                     <h:inputTextarea rows="4" cols="30" id="colectDescripcion" value="#{colectivosController.selected.colectDescripcion}" title="#{bundle.CreateColectivosTitle_colectDescripcion}" required="true" requiredMessage="#{bundle.CreateColectivosRequiredMessage_colectDescripcion}"/>
                 </h:panelGrid>
                 <br />
-                <p:commandButton value="Crear Colectivo" update=":colectivosTabView:colectivosAccordionPanel:colectivosListAdminForm,:colectivosTabView:colectivosListForm:growl,:colectivosTabView:colectivosListForm,colectivosCreateForm" id="enviarBoton" action="#{colectivosController.create}" styleClass="ui-priority-primary"/>
-                <br />
-                <br />
-                <h:commandLink action="#{colectivosController.prepareList}" value="#{bundle.CreateColectivosShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.CreateColectivosIndexLink}"/>
+                <p:commandButton value="Crear Colectivo" id="enviarBoton" action="#{colectivosController.create}" update=":colectivosTabView:colectivosAccordionPanel:colectivosListAdminForm,:colectivosTabView:colectivosListForm,colectivosCreateForm" oncomplete="handleSubmit(args,'ColectivosCreateDialog');"/>
+                <p:commandButton value="Cancelar" onclick="ColectivosCreateDialog.hide()"/>
             </h:form>
-        </ui:define>
+        </p:dialog>
+
     </ui:composition>
 
 </html>

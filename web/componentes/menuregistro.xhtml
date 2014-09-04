@@ -1,38 +1,49 @@
 <?xml version='1.0' encoding='UTF-8' ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      lang="es"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title><ui:insert name="title">Default Title</ui:insert></title>
-        <link rel="stylesheet" type="text/css" href="../Recursos/Css/general.css" />
-    </h:head>
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-    <h:body>
-        
-        <h:form class="Titulo">
-                    <p>
-<!--                 Alternativamente puede ser:   <h:graphicImage id="logo"  alt="Red Colombiana de Dinámica de Sistemas" url="/Recursos/Imagenes/logoredDS.jpg" style="float:left">
-                    </h:graphicImage>    -->
-                        
-                    <h:graphicImage id="logo"  alt="Red Colombiana de Dinámica de Sistemas" url="/Recursos/Imagenes/logoredDS.jpg" style="float:left">
-                    </h:graphicImage>  
+    <ui:composition>
 
-                    <p> <h1> Red Colombiana de Dinámica de Sistemas</h1>
-                    </p> 
-                </p>
-                <br></br> <br></br>    
-                <p:breadCrumb>                     
-                    <p:menuitem value="Inicio" actionListener="#{loggin.irA('index')}"/>  
-                    <p:menuitem value="Perfil" actionListener="#{loggin.irA('perfil')}" rendered="#{loggin.activa}"/> 
-                    <p:menuitem value="Colectivos" actionListener="#{loggin.irA('colectivos')}" rendered="#{loggin.activa}"/> 
-                </p:breadCrumb>  
-           </h:form>
-        
-    </h:body>
+        <h:form id="menuRegistroForm" styleClass="menu">
+            <p:menubar>
+                <p:menuitem value="Inicio" outcome="/index" icon="ui-icon-home"/>
+                <p:menuitem value="Perfiles" outcome="/web/usuarios/datosUsuario.xhtml" icon="ui-icon-home"/>
+                <p:menuitem value="Colectivos" outcome="/web/colectivos/index.xhtml" icon="ui-icon-home"/>
+                <p:submenu label="Todo">
+                    <p:menuitem value="Archivos" outcome="/web/archivos/List.xhtml" />
+                    <p:menuitem value="Ciudad" outcome="/web/ciudad/List.xhtml" />
+                    <p:menuitem value="Colectivos" outcome="/web/colectivos/List.xhtml" />
+                    <p:menuitem value="Comentarios" outcome="/web/comentarios/List.xhtml" />
+                    <p:menuitem value="Conversacion" outcome="/web/conversacion/List.xhtml" />
+                    <p:menuitem value="Departamentos" outcome="/web/departamentos/List.xhtml" />
+                    <p:menuitem value="Eventos" outcome="/web/eventos/List.xhtml" />
+                    <p:menuitem value="Formaparte" outcome="/web/formaparte/List.xhtml" />
+                    <p:menuitem value="Foros" outcome="/web/foros/List.xhtml" />
+                    <p:menuitem value="Gruposinvestiga" outcome="/web/gruposinvestiga/List.xhtml" />
+                    <p:menuitem value="Historialarchivos" outcome="/web/historialarchivos/List.xhtml" />
+                    <p:menuitem value="Mensaje" outcome="/web/mensaje/List.xhtml" />
+                    <p:menuitem value="Noticias" outcome="/web/noticias/List.xhtml" />
+                    <p:menuitem value="Palabrasclave" outcome="/web/palabrasclave/List.xhtml" />
+                    <p:menuitem value="Respuestascoment" outcome="/web/respuestascoment/List.xhtml" />
+                    <p:menuitem value="Solicitudes" outcome="/web/solicitudes/List.xhtml" />
+                    <p:menuitem value="Universidades" outcome="/web/universidades/List.xhtml" />
+                    <p:menuitem value="Usuarios" outcome="/web/usuarios/List.xhtml" />
+                    <p:menuitem value="Version" outcome="/web/version/List.xhtml" />
+                </p:submenu>
+                <f:facet name="options">
+                    <p:inputText placeholder="Search"/>
+                    <p:commandButton type="button" value="Logout" icon="ui-icon-extlink"/>
+                </f:facet>
+                <f:facet name="options">
+                    <ui:include src="/web/usuarios/perfil.xhtml" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+
+    </ui:composition>
 
 </html>

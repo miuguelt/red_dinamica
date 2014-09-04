@@ -213,6 +213,15 @@ public class ForosController implements Serializable {
     //CODIGO PERSONAL
     private Foros current;
     private Foros foros_select = new Foros();
+    private static boolean hayForo = false;
+
+    public boolean isHayForo() {
+        return hayForo;
+    }
+
+    public static void setHayForo(boolean hayForo) {
+        ForosController.hayForo = hayForo;
+    }
     
     public Foros getForos_select() {
         return foros_select;
@@ -263,5 +272,6 @@ public class ForosController implements Serializable {
     public void RowSelect() {
         JsfUtil.addSuccessMessage("Row select");
         ComentariosController.setForoActual(foros_select);
+        setHayForo(true);
     }
 }

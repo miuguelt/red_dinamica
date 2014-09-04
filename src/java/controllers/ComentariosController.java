@@ -2,6 +2,7 @@ package controllers;
 
 import clases.Comentarios;
 import clases.Foros;
+import com.sun.org.apache.bcel.internal.Constants;
 import controllers.util.JsfUtil;
 import controllers.util.PaginationHelper;
 import facade.ComentariosFacade;
@@ -21,13 +22,13 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import org.primefaces.component.log.Log;
 
 @Named("comentariosController")
 @SessionScoped
 public class ComentariosController implements Serializable {
 
     private Comentarios current;
-    private DataModel items = null;
     @EJB
     private facade.ComentariosFacade ejbFacade;
     private PaginationHelper pagination;
@@ -140,10 +141,6 @@ public class ComentariosController implements Serializable {
         }
     }
 
-    private void recreateModel() {
-        items = null;
-    }
-
     private void recreatePagination() {
         pagination = null;
     }
@@ -214,7 +211,8 @@ public class ComentariosController implements Serializable {
 
     //Codigo Personal
     private static Foros foroActual = new Foros();
-
+    private static DataModel items = null;
+        
     public Foros getForoActual() {
         return foroActual;
     }
@@ -222,8 +220,11 @@ public class ComentariosController implements Serializable {
     public static void setForoActual(Foros forosActual) {
         ComentariosController.foroActual = forosActual;
     }
-
     
+    private void recreateModel() {
+        items = null;
+    }
+
     public DataModel getItems() {
 //        if (items == null) {
 //            items = getPagination().createPageDataModel();
@@ -239,10 +240,11 @@ public class ComentariosController implements Serializable {
 
     public void create() {
         try {
-          asignarTodo();
-          getFacade().create(current);
-            if (!getForoActual().getComentariosCollection().isEmpty()) getForoActual().getComentariosCollection().add(current);
-            else {
+            asignarTodo();
+            getFacade().create(current);
+            if (!getForoActual().getComentariosCollection().isEmpty()) {
+                getForoActual().getComentariosCollection().add(current);
+            } else {
                 List<Comentarios> lista = new ArrayList<>();
                 lista.add(current);
                 getForoActual().setComentariosCollection(lista);

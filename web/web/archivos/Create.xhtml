@@ -5,14 +5,12 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:composition template="/template.xhtml">
-        <ui:define name="title">
-        </ui:define>
-        <ui:define name="body">
-            <h:form id="panel"> 
-                <p:commandButton id="movieBtn" value="#{bundle.CreateArchivosTitle}" type="button" />
+    <ui:composition >
+       
+            <h:form id="archivosFormBoton"> 
+                <p:commandButton id="overlayBoton" value="#{bundle.CreateArchivosTitle}" type="button" />
             </h:form>
-            <p:overlayPanel id="moviePanel" for=":forosTabView:panel:movieBtn" appendToBody="true" hideEffect="fade" dynamic="true" style="width:500px">
+            <p:overlayPanel id="archivosOverlay" for=":forosTabView:archivosFormBoton:overlayBoton" appendToBody="true" hideEffect="fade"   >
                 <h1><h:outputText value="#{bundle.CreateArchivosTitle}"></h:outputText></h1>
                 <br />
                 <h:form id="archivosCreateForm">
@@ -27,7 +25,7 @@
                         <h:inputTextarea rows="4" cols="30" id="archivoResumen" value="#{archivosController.selected.archivoResumen}" title="#{bundle.CreateArchivosTitle_archivoResumen}" />
                     </h:panelGrid>
                     <br />
-                    <p:commandButton value="#{bundle.CreateArchivosSaveLink}" update="archivosCreateForm,:forosTabView:archivosListForm,:forosTabView:versionListForm" actionListener="#{archivosController.create}" styleClass="ui-priority-primary"/>
+                    <p:commandButton value="#{bundle.CreateArchivosSaveLink}" update="archivosCreateForm,:forosTabView:archivosFormBoton,:forosTabView:archivosOverlay,:forosTabView:archivosListForm,:forosTabView:versionListForm" actionListener="#{archivosController.create}" styleClass="ui-priority-primary"/>
                     <br />
                     <br />
                     <h:commandLink action="#{archivosController.prepareList}" value="#{bundle.CreateArchivosShowAllLink}" immediate="true"/>
@@ -37,7 +35,6 @@
 
                 </h:form>
             </p:overlayPanel>
-        </ui:define>
     </ui:composition>
 
 </html>

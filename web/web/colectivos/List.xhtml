@@ -3,94 +3,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="./../../templates/generalTemplate.xhtml">        
-        <ui:define name="contenido">
-            <p:tabView effect="#{tabBean.effect}" id="colectivosTabView" effectDuration="normal" style="height: auto;" >  
-                <p:tab title="Todos" >
-                    <h:form id="colectivosListForm">
-                        <p:growl id="growl" life="20000" autoUpdate="true"/>
-                        <h:outputText escape="false" value="#{bundle.ListColectivosEmpty}" rendered="#{colectivosController.items.rowCount == 0}"/>
-                        <h:panelGroup rendered="#{colectivosController.items.rowCount > 0}">
-                            <p:dataTable sortMode="multiple"  value="#{colectivosController.items}" var="item"  style="border: 0px" emptyMessage="Todos los usuarios son tus contactos" paginator="true" rows="10" >
- 
-                                <p:column id="tituloColumn" style="width:20%"  headerText="Titulo" filterValue="#{item.colectTitulo}"
-                                          filterMatchMode="contains" sortBy="#{item.colectTitulo}" filterBy="#{item.colectTitulo}">
-                                    <h:outputText value="#{item.colectTitulo}"/>
-                                </p:column>
+    <ui:composition>        
+        <h:form id="colectivosListForm">
+            <h:outputText escape="false" value="#{bundle.ListColectivosEmpty}" rendered="#{colectivosController.items.rowCount == 0}"/>
+            <h:panelGroup rendered="#{colectivosController.items.rowCount > 0}">
+                <p:dataTable sortMode="multiple"  value="#{colectivosController.items}" var="item" emptyMessage="Todos los usuarios son tus contactos" paginator="true" rows="10" >
 
-                                <p:column id="descripcionColumn" style="width:20%"  headerText="Descripción" filterValue="#{item.colectDescripcion}"
-                                          filterMatchMode="contains" sortBy="#{item.colectDescripcion}" filterBy="#{item.colectDescripcion}">
-                                    <h:outputText value="#{item.colectDescripcion}"/>
-                                </p:column>
+                    <p:column id="tituloColumn" style="width:20%" headerText="Titulo" filterValue="#{item.colectTitulo}"
+                              filterMatchMode="contains" sortBy="#{item.colectTitulo}" filterBy="#{item.colectTitulo}">
+                        <h:outputText value="#{item.colectTitulo}"/>
+                    </p:column>
 
-                                <p:column style="width:20%">
-                                    <p:commandButton icon="ui-icon-folder-open" action="#{colectivosController.setColectivo(item)}" title="Acceder a Colectivo" />
-                                    <p:commandButton icon="ui-icon-plusthick" disabled="#{item.colectEstado}" update=":colectivosTabView:colectivosListForm:growl,:colectivosTabView:colectivosListForm,:colectivosTabView:colectivosAccordionPanel:colectivosListColaboradorForm" action="#{formaparteController.asignarTodo(item)}" actionListener="#{colectivosController.AsignarEstado(item)}" title="Agregar Colectivo" />
-                                </p:column>             
+                    <p:column id="descripcionColumn" style="width:20%"  headerText="Descripción" filterValue="#{item.colectDescripcion}"
+                              filterMatchMode="contains" sortBy="#{item.colectDescripcion}" filterBy="#{item.colectDescripcion}">
+                        <h:outputText value="#{item.colectDescripcion}"/>
+                    </p:column>
 
-                            </p:dataTable>
-                        </h:panelGroup>
-                    </h:form>
-
-                    <ui:include src="/web/colectivos/Create.xhtml"/>
-
-                </p:tab>
-                <p:tab title="Personales">
-                    <p:accordionPanel id="colectivosAccordionPanel" multiple="true" binding="#{usrActual}" value="#{usuariosController.selected}" >
-                        <p:tab title="Administrador" id="panelAdmin">
-                            <h:form id="colectivosListAdminForm">
-                                <h:outputText escape="false" value="#{bundle.ListColectivosEmpty}" rendered="#{colectivosController.itemsAdministrador.rowCount == 0}"/>
-                                <h:panelGroup rendered="#{colectivosController.itemsAdministrador.rowCount > 0}">
-                                    <p:dataTable sortMode="multiple"  value="#{colectivosController.itemsAdministrador}" var="itemAdmin"  style="border: 0px" emptyMessage="Todos los usuarios son tus contactos" paginator="true" rows="10" >
-
-                                        <p:column id="tituloColumn" style="width:20%"  headerText="Titulo" filterValue="#{itemAdmin.colectTitulo}"
-                                                  filterMatchMode="contains" sortBy="#{itemAdmin.colectTitulo}" filterBy="#{itemAdmin.colectTitulo}">
-                                            <h:outputText value="#{itemAdmin.colectTitulo}"/>
-                                        </p:column>
-
-                                        <p:column id="descripcionColumn" style="width:20%"  headerText="Descripción" filterValue="#{itemAdmin.colectDescripcion}"
-                                                  filterMatchMode="contains" sortBy="#{itemAdmin.colectDescripcion}" filterBy="#{itemAdmin.colectDescripcion}">
-                                            <h:outputText value="#{itemAdmin.colectDescripcion}"/>
-                                        </p:column>
-
-                                        <p:column style="width:20%">
-                                            <p:commandButton icon="ui-icon-comment" action="#{colectivosController.setColectivo(itemAdmin)}" title="Acceder al Colectivo" />
-                                        </p:column>
-
-                                    </p:dataTable>
-                                </h:panelGroup>
-                            </h:form>
-                        </p:tab> 
-                        <p:tab title="Colaborador" >
-                            <h:form id="colectivosListColaboradorForm">
-                                <h:outputText escape="false" value="#{bundle.ListColectivosEmpty}" rendered="#{colectivosController.itemsColaborador.rowCount == 0}"/>
-                                <h:panelGroup rendered="#{colectivosController.itemsColaborador.rowCount > 0}">
-                                    <p:dataTable sortMode="multiple"  value="#{colectivosController.itemsColaborador}" var="itemCol"  style="border: 0px" emptyMessage="Todos los usuarios son tus contactos" paginator="true" rows="10" >
-
-                                        <p:column id="tituloColumn" style="width:20%"  headerText="Titulo" filterValue="#{itemCol.colectTitulo}"
-                                                  filterMatchMode="contains" sortBy="#{itemCol.colectTitulo}" filterBy="#{itemCol.colectTitulo}">
-                                            <h:outputText value="#{itemCol.colectTitulo}"/>
-                                        </p:column>
-
-                                        <p:column id="descripcionColumn" style="width:20%"  headerText="Descripción" filterValue="#{itemCol.colectDescripcion}"
-                                                  filterMatchMode="contains" sortBy="#{itemCol.colectDescripcion}" filterBy="#{itemCol.colectDescripcion}">
-                                            <h:outputText value="#{itemCol.colectDescripcion}"/>
-                                        </p:column>
-
-                                        <p:column style="width:20%">
-                                            <p:commandButton icon="ui-icon-comment" action="#{colectivosController.setColectivo(itemAdmin)}" title="Acceder al Colectivo" />
-                                        </p:column>
-
-                                    </p:dataTable>
-                                </h:panelGroup>
-                            </h:form>
-                        </p:tab> 
-                    </p:accordionPanel>  
-                </p:tab>
-            </p:tabView>
-        </ui:define>
+                    <p:column style="width:20%">
+                        <p:commandButton icon="ui-icon-folder-open" action="#{colectivosController.setColectivo(item)}" title="Acceder a Colectivo" />
+                        <p:commandButton icon="ui-icon-plusthick" disabled="#{item.colectEstado}"  action="#{formaparteController.asignarTodo(item)}" actionListener="#{colectivosController.AsignarEstado(item)}" title="Agregar Colectivo" />
+                    </p:column>             
+                    <f:facet name="footer">
+                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="Crear Colectivo" actionListener="#{colectivosController.prepareCreate}" oncomplete="PF('ColectivosCreateDialog').show()"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
     </ui:composition>
-
 </html>

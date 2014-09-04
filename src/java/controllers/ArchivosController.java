@@ -250,7 +250,10 @@ public class ArchivosController implements Serializable {
         try {
             asignarTodo();
             getFacade().create(current);
-            Version version = new Version(current, new Date(), 1);
+            Version version = new Version();
+            version.setVersionArchivoId(current);
+            version.setVersionFecha(new Date());
+            version.setVersionNumero(1);
             ejbVersionFacade.create(version);
             List<Version> listaV = new ArrayList<>();
             listaV.add(version);

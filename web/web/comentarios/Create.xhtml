@@ -3,29 +3,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="/template.xhtml">
-        <ui:define name="title">            
-            <h:outputText value="#{bundle.CreateComentariosTitle}"></h:outputText>
-        </ui:define>
-        <ui:define name="body">
-            <h:form id="comentariosCreateForm" >
-                <h:panelGrid columns="2">
-                    <h:outputLabel value="#{bundle.CreateComentariosLabel_comentDescripcion}" for="comentDescripcion" />
-                    <h:inputText id="comentDescripcion" value="#{comentariosController.selected.comentDescripcion}" title="#{bundle.CreateComentariosTitle_comentDescripcion}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentDescripcion}"/>
-                </h:panelGrid>
-                <br />
-                <p:commandButton actionListener="#{comentariosController.create}" value="#{bundle.CreateComentariosSaveLink}" update=":forosTabView:comentariosListForm,comentariosCreateForm" styleClass="ui-priority-primary"/>
-                <br />
-                <br />
-                <h:commandLink action="#{comentariosController.prepareList}" value="#{bundle.CreateComentariosShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.CreateComentariosIndexLink}"/>
-            </h:form>
-        </ui:define>
+    <ui:composition>
+        <br/>
+        <br/>
+        <h:form id="comentariosCreateForm">
+            <h:panelGrid columns="1" rendered="#{forosController.hayForo}">
+                <f:facet name="header">
+                    <h2><h:outputText value="Escriba su comentario"/></h2>
+                </f:facet>
+                <p:editor id="comentDescripcion" value="#{comentariosController.selected.comentDescripcion}" required="true" requiredMessage="#{bundle.CreateComentariosRequiredMessage_comentDescripcion}"/>
+            </h:panelGrid>
+            <p:commandButton actionListener="#{comentariosController.create}" value="#{bundle.CreateComentariosSaveLink}" update=":forosTabView:comentariosListForm,comentariosCreateForm" styleClass="ui-priority-primary" rendered="#{forosController.hayForo}"/>
+        </h:form>
     </ui:composition>
-
 </html>

@@ -19,7 +19,7 @@
                     <h:outputText value="#{ciudadController.pagination.pageFirstItem + 1}..#{ciudadController.pagination.pageLastItem + 1}/#{ciudadController.pagination.itemsCount}"/>&nbsp;
                     <h:commandLink action="#{ciudadController.previous}" value="#{bundle.Previous} #{ciudadController.pagination.pageSize}" rendered="#{ciudadController.pagination.hasPreviousPage}"/>&nbsp;
                     <h:commandLink action="#{ciudadController.next}" value="#{bundle.Next} #{ciudadController.pagination.pageSize}" rendered="#{ciudadController.pagination.hasNextPage}"/>&nbsp;
-                    <h:dataTable value="#{ciudadController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                    <h:dataTable value="#{ciudadController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all">
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListCiudadTitle_ciudadId}"/>

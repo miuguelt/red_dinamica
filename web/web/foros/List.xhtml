@@ -3,113 +3,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:composition template="./../../templates/generalTemplate.xhtml">
-        <ui:define name="contenido">
-            <p:tabView id="forosTabView" effectDuration="normal" style="height: auto;" >
-                <p:tab title="Foros" >
-                    <p:layout >
-                        <p:layoutUnit position="west" size="30%" >
-                            <ui:include src="/web/foros/Create.xhtml" />
-                            <h:form styleClass="jsfcrud_list_form" id="forosListForm">
-                                <p:growl id="growl" life="20000" autoUpdate="true"/>
-                                <h:outputText id="forosListoutput" escape="false" value="#{bundle.ListForosEmpty}" rendered="#{forosController.items.rowCount == 0}"/>
-                                <h:panelGroup id="forosListpanelGroup" rendered="#{forosController.items.rowCount > 0}">
-                                    <p:dataTable id="forosListDataTable" value="#{forosController.items}" emptyMessage="No hay Foros" var="item"  style="border:solid 1px" selectionMode="single"  selection="#{forosController.foros_select}" rowKey="#{item.foroId}"
-                                                 editable="true" >
-                                        <p:ajax event="rowSelect" listener="#{forosController.RowSelect}" update=":forosTabView:forosListForm:growl,:forosTabView:comentariosListForm"/>
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="#{bundle.ListForosTitle_foroTema}"/>
-                                            </f:facet>
-                                            <h:outputText value="#{item.foroTema}"/>
-                                        </p:column>
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="#{bundle.ListForosTitle_foroDescripcion}"/>
-                                            </f:facet>
-                                            <h:outputText value="#{item.foroDescripcion}"/>
-                                        </p:column>
-
-                                        <h:dataTable id="forosListDataTable" value="#{forosController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroId}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroId}"/>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroTema}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroTema}"/>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroFecha}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroFecha}">
-                                                    <f:convertDateTime pattern="MM/dd/yyyy" />
-                                                </h:outputText>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroDescripcion}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroDescripcion}"/>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroUsrId}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroUsrId}"/>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="#{bundle.ListForosTitle_foroColectId}"/>
-                                                </f:facet>
-                                                <h:outputText value="#{item.foroColectId}"/>
-                                            </h:column>
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="&nbsp;"/>
-                                                </f:facet>
-                                                <h:commandLink action="#{forosController.prepareView}" value="#{bundle.ListForosViewLink}"/>
-                                                <h:outputText value=" "/>
-                                                <h:commandLink action="#{forosController.prepareEdit}" value="#{bundle.ListForosEditLink}"/>
-                                                <h:outputText value=" "/>
-                                                <h:commandLink action="#{forosController.destroy}" value="#{bundle.ListForosDestroyLink}"/>
-                                            </h:column>
-                                        </h:dataTable>
-                                    </p:dataTable>
-                                </h:panelGroup>
-
-                            </h:form>
-                        </p:layoutUnit>
-                        <p:layoutUnit position="center">
-                            <ui:include src="/web/comentarios/List.xhtml" />
-                            <ui:include src="/web/comentarios/Create.xhtml" />
-                        </p:layoutUnit>
-                    </p:layout>
-                </p:tab>
-
-                <p:tab title="Archivos" >
-                    <p:layout id="p">
-                        <p:layoutUnit id="pp" position="west" size="30%" >
-                            <ui:include src="/web/archivos/List.xhtml" />
-                            <ui:include src="/web/archivos/Create.xhtml" />
-                        </p:layoutUnit>
-
-                        <p:layoutUnit id="center" position="center">
-                            <ui:include src="/web/version/List.xhtml" />
-                            <ui:include src="/web/version/Create.xhtml" />
-                        </p:layoutUnit>
-                    </p:layout>
-                </p:tab>
-            </p:tabView>  
-        </ui:define>     
+    <ui:composition >
+        <h:form id="forosListForm">
+            <h:outputText id="forosListoutput" escape="false" value="#{bundle.ListForosEmpty}" rendered="#{forosController.items.rowCount == 0}"/>
+            <h:panelGroup id="forosListpanelGroup" rendered="#{forosController.items.rowCount > 0}">
+                <p:dataTable id="forosListDataTable" value="#{forosController.items}" emptyMessage="No hay Foros" var="item" selectionMode="single"  selection="#{forosController.foros_select}" rowKey="#{item.foroId}" editable="true">
+                    <p:ajax event="rowSelect" listener="#{forosController.RowSelect}" update=":forosTabView:forosViewForm,:forosTabView:comentariosListForm,:forosTabView:comentariosCreateForm"/>   <!--update=":forosTabView:forosViewForm,:forosTabView:forosListForm:growl,:forosTabView:comentariosListForm,:forosTabView:comentariosCreateForm"-->
+                    <p:column filterValue="#{item.foroDescripcion}" filterMatchMode="contains" sortBy="#{item.foroDescripcion}" filterBy="#{item.foroDescripcion}">
+                        <h3> #{item.foroTema}</h3>
+                        #{item.foroDescripcion}
+                    </p:column>                                       
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
     </ui:composition>
-
 </html>

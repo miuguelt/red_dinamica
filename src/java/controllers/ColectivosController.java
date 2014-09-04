@@ -283,7 +283,10 @@ public class ColectivosController implements Serializable {
 
     public void setColectivo(Colectivos colectivo) throws IOException {
         setColectivoActual(colectivo);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/foros/List.xhtml");
+        ForosController.setHayForo(false);
+        JsfUtil.addSuccessMessage("Segundo mensaje");
+        ComentariosController.setForoActual(new Foros());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/faces/web/foros/index.xhtml");
     }
 
     public void prepareCreate() {

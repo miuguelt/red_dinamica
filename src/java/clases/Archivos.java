@@ -218,11 +218,11 @@ public class Archivos implements Serializable {
     public String toString() {
         return "clases.Archivos[ archivoId=" + archivoId + " ]";
     }
-
+    
     @XmlTransient
     public Collection<Version> getVersionCollection() {
         return versionCollection;
-    }
+}
 
     public void setVersionCollection(Collection<Version> versionCollection) {
         this.versionCollection = versionCollection;

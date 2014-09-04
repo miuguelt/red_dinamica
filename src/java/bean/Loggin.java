@@ -126,8 +126,9 @@ public class Loggin implements InterfaceBean {
                 sessionv.setAttribute("user", usrActual);
                 session.setActiva(true);
                 JsfUtil.addSuccessMessage("Sesion Iniciada");
-                //FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
 //                irA("perfiles");
+               
             } else {
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Verifique cédula y/o contraseña!", ""));
@@ -153,8 +154,7 @@ public class Loggin implements InterfaceBean {
         session.setActiva(false);
         UsuariosController.setCurrent(null);
         JsfUtil.addSuccessMessage("Cerrar sesion");
-//        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
-
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/red_dinamica/");
     }
 
     public void irA(String dire) throws IOException {
